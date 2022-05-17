@@ -1,15 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { Component } from 'react';
-import {View,Text,StyleSheet} from 'react-native'
+import {View,Text,StyleSheet,TouchableOpacity,Alert,ActivityIndicator} from 'react-native'
 import { Navigation } from 'react-native-navigation';
 import APIs from '../Network/APIs';
+import {NativeBaseProvider} from 'native-base'
+import DeleteAccount from '../Components/DeleteAccount';
+import Transition from '../Transition/Transition';
 
 export default class AccountDetails extends Component {
     constructor(props){
         super(props)
         Navigation.events().bindComponent(this)
         this.state={
-            all_info:{}
+            all_info:{},
+            modal_visibility_status:0
 
         }
     }
@@ -41,8 +45,14 @@ export default class AccountDetails extends Component {
       const {name,user_name,country,district,subdistrict,region,Location,currency,cell_number}=this.state.all_info
       
     return (
+        <NativeBaseProvider>
+            {
+                this.state.modal_visibility_status >0 && <DeleteAccount visibilityStatus={this.state.modal_visibility_status}/>
+            }
       <View style={this.styles.rootView}>
+          
           <View style={this.styles.infoStyles}>
+              
               <View style={{flexDirection:'row',width:"100%"}}>
                   <Text style={this.styles.titleStyles}>Shop Name </Text>
                   <Text style={this.styles.dataStyles}>{name}</Text>
@@ -63,6 +73,10 @@ export default class AccountDetails extends Component {
                   <Text style={this.styles.titleStyles}>Subdistrict </Text>
                   <Text style={this.styles.dataStyles}>{subdistrict}</Text>
               </View>
+
+              {
+              Object.keys(this.state.all_info).length<=0 && <ActivityIndicator color={"red"}/>
+          }
               <View style={{flexDirection:'row'}}>
                   <Text style={this.styles.titleStyles}>Region </Text>
                   <Text style={this.styles.dataStyles}>{region}</Text>
@@ -84,25 +98,29 @@ export default class AccountDetails extends Component {
           </View>
 
           <View style={this.styles.buttonsStyle}>
-              <View style={{
+              <TouchableOpacity onPress={()=>{
+                  Transition.go("Registration","homeStackID",1,this.state.all_info)
+                  
+              }} style={{
                   alignItems:"center",backgroundColor:"#468499",
                   width:"60%",height:"40%",borderRadius:10,
                   alignItems:"center",justifyContent:"center"
               }}>
                   <Text style={this.styles.buttonText}>UPDATE ACCOUNT</Text>
-              </View>
-              <View style={{
+              </TouchableOpacity>
+              <TouchableOpacity onPress={()=>this.setState({modal_visibility_status: this.state.modal_visibility_status+1})} style={{
                   alignItems:"center",backgroundColor:"#ff0000",
                   width:"60%",height:"40%",borderRadius:10,
                   alignItems:"center",justifyContent:"center"
               }}>
                   <Text style={this.styles.buttonText}>DELETE ACCOUNT</Text>
-              </View>
+              </TouchableOpacity>
               <View>
 
               </View>
           </View>
       </View>
+      </NativeBaseProvider>
     );
   }
 

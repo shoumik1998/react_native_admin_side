@@ -2,6 +2,31 @@ import API_Client from "./API_Client";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
+const register=async (country,district,subdistrict,region,location,
+    shop_name,user_name,password,currency,cell_number,selector_code)=>{
+
+        var response=null
+
+        try {
+            await API_Client.post("/register",{
+                country: country,district : district, subdistrict: subdistrict,
+                region : region, location : location, shop_name: shop_name,
+                user_name : user_name, password : password,currency : currency,
+                cell_number: cell_number,selector_code: selector_code
+            }).then((json_response)=>{
+                response=json_response.data
+                console.log(response)
+            })
+            
+        } catch (error) {
+            
+        }
+        return response
+
+
+}
+
+
 const login = async (user_name, user_password) => {
     var response = null;
 
@@ -35,6 +60,7 @@ const fetchAllProducts = async (user_name) => {
 
         }).then((json_response) => {
             response = json_response.data
+            console.log(response)
 
 
 
@@ -52,8 +78,8 @@ const fetchDetails = async (user_name, user_password) => {
     var response = null;
     try {
         await API_Client.post("/details_fetching", {
-            user_name: "Mizan@1999",
-            user_password: "p"
+            user_name: user_name,
+            user_password:user_password
         }).then((json_response) => {
             response = json_response.data;
 
@@ -64,8 +90,21 @@ const fetchDetails = async (user_name, user_password) => {
     }
 
     return response;
+}
 
+const deleteProduct= async(selected_ids)=>{
+    var response=null;
 
+    try {
+        await API_Client.post("/delete_products",{
+            ids : selected_ids
+        }).then((json_response)=>{
+            response=json_response.data
+        })
+        
+    } catch (error) {   
+    }
+    return response;
 }
 
 const uploadImage=async(title,price,orderableStatus,imageData,userName)=>{
@@ -86,8 +125,40 @@ const uploadImage=async(title,price,orderableStatus,imageData,userName)=>{
         
     }
     return response;
+}
+
+const deleteAccountForever=async(user_name)=>{
+    var response=null
+    try {
+
+        await API_Client.post("/account_delete",{
+            user_name:user_name
+        }).then((json_response)=>{
+            response=json_response.data
+        })
+        
+    } catch (error) {
+        
+    }
+    return response
+
+}
+
+const orderedProducts=async(user_name,status_code)=>{
+    var response=null;
+    try {
+        await API_Client.post("/order",{
+            user_name: user_name,
+            status_code : status_code
+        }).then((json_response)=>{
+            response=json_response.data
+        })
+    } catch (error) {
+        
+    }
+    return response;
 
 
 }
 
-export default { fetchAllProducts, login, fetchDetails,uploadImage };
+export default { fetchAllProducts, login, fetchDetails,uploadImage ,deleteAccountForever,register,deleteProduct,orderedProducts};

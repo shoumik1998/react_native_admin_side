@@ -1,9 +1,13 @@
 import React from 'react';
-import { Text, View ,StyleSheet,Image} from 'react-native';
+import { Text, View ,StyleSheet,Image , Dimensions} from 'react-native';
 import Circle from './Circle';
 
 const ProductChildView=({data,selectedId})=>{
     const {imagepath,price,description,currency}=data
+    
+    const screenWidth=Dimensions.get('window').width
+        const screenHeight=Dimensions.get('window').height
+    
     
     return (
         <View style={{
@@ -11,10 +15,10 @@ const ProductChildView=({data,selectedId})=>{
           elevation: 5,
           margin: 5,
           borderRadius: 5,
-          backgroundColor:  "white",
+          backgroundColor: selectedId ? "gray" : "white",
           shadowOpacity: 2,
-          width: 160,
-          height: 200,
+          width: screenWidth/2.2,
+          height: screenHeight/3.5,
         }}>
           <View style={{ margin: 10, alignSelf:"flex-start" }}>
             <Circle style_add={{width:5,height:5,borderRadius:2}}/>

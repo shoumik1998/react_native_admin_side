@@ -1,3 +1,4 @@
+import React from "react";
 import { Navigation } from "react-native-navigation";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -9,17 +10,19 @@ import AllProducts from "./Pages/AllProducts"
 import SideMenuPage from "./Components/SideMenuPage"
 import Authentication from "./Pages/Authentication"
 import AccountDetails from "./Pages/AccountDetails"
+import OrderedProducts from "./Pages/OrderedProducts"
 
 
 
 Navigation.registerComponent('com.myApp.WelcomeScreen', () => App);
-Navigation.registerComponent('Login', () => Login);
+Navigation.registerComponent('Login', () =>Login);
 Navigation.registerComponent('Registration', () => Registration);
 Navigation.registerComponent('Home',()=>HomePage)
 Navigation.registerComponent('AllProducts',()=>AllProducts)
 Navigation.registerComponent('SideMenuPage',()=>SideMenuPage)
 Navigation.registerComponent("Authentication",()=>Authentication)
 Navigation.registerComponent("AccountDetails",()=>AccountDetails)
+Navigation.registerComponent("OrderedProducts",()=>OrderedProducts)
 
 
 Navigation.setDefaultOptions({
@@ -91,6 +94,7 @@ Navigation.events().registerAppLaunchedListener(async() => {
     Navigation.setRoot({
       root: {
         stack: {
+          id:'homeStackID',
           children: [
             {
               component: {

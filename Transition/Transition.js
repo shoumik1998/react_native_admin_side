@@ -2,12 +2,16 @@ import { Navigation } from "react-native-navigation";
 
 
 
-const go = (componentName, componentId,props) => {
+const go = (componentName, componentId,prop1,prop2) => {
 
     Navigation.push(componentId, {
         
         component: {
             name: componentName,
+            passProps:{
+                selector_code:prop1,
+                data:prop2
+            },
             options: {
                 sideMenu: {
                     left: {

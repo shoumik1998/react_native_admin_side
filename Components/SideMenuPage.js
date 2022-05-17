@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Center, NativeBaseProvider } from "native-base";
+import { Center, NativeBaseProvider,Toast } from "native-base";
 import { View, Text, Image, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import { Navigation } from "react-native-navigation";
 import Transition from "../Transition/Transition";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 
@@ -22,7 +23,7 @@ const SideMenuPage=()=>{
                             <Text style={styles.textStyles}>My Products</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{Alert.alert("Orders")}}>
+                    <TouchableOpacity onPress={()=>{Transition.go("OrderedProducts","homeScreenID",1)}}>
                         <View style={styles.viewStyles}>
                             <Image source={require('../Assets/mobile_order.png')} style={styles.imageStyles}/>
                             <Text style={styles.textStyles}>Orders</Text>
@@ -40,13 +41,23 @@ const SideMenuPage=()=>{
                             <Text style={styles.textStyles}>Stock Out Products</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{Alert.alert("History")}}>
+                    <TouchableOpacity onPress={()=>{Transition.go("OrderedProducts","homeScreenID",4)}}>
                         <View style={styles.viewStyles}>
                             <Image source={require('../Assets/history.png')} style={styles.imageStyles}/>
                             <Text style={styles.textStyles}>History</Text>
                         </View>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={()=>{Alert.alert("My LogOut")}}>
+                    <TouchableOpacity onPress={async()=>{
+                        try {
+                            await AsyncStorage.clear()
+                            Toast.show({title:"You are logged out"})
+                            Transition.setRoot("Login")
+                            
+                        } catch (error) {
+                            
+                        }
+
+                    }}>
                         <View style={styles.viewStyles}>
                             <Image source={require('../Assets/logout.png')} style={styles.imageStyles}/>
                             <Text style={styles.textStyles}>Log Out</Text>
