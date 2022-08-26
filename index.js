@@ -11,6 +11,8 @@ import SideMenuPage from "./Components/SideMenuPage"
 import Authentication from "./Pages/Authentication"
 import AccountDetails from "./Pages/AccountDetails"
 import OrderedProducts from "./Pages/OrderedProducts"
+import OrderDetails from "./Pages/OrderDetails"
+
 
 
 
@@ -23,6 +25,7 @@ Navigation.registerComponent('SideMenuPage',()=>SideMenuPage)
 Navigation.registerComponent("Authentication",()=>Authentication)
 Navigation.registerComponent("AccountDetails",()=>AccountDetails)
 Navigation.registerComponent("OrderedProducts",()=>OrderedProducts)
+Navigation.registerComponent("OrderDetails",()=>OrderDetails)
 
 
 Navigation.setDefaultOptions({
@@ -56,6 +59,8 @@ Navigation.events().registerAppLaunchedListener(async() => {
   } catch (error) {
 
   }
+
+  
 
   if (user_name !== null && currency !== null) {
 

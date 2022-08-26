@@ -157,8 +157,29 @@ const orderedProducts=async(user_name,status_code)=>{
         
     }
     return response;
-
-
 }
 
-export default { fetchAllProducts, login, fetchDetails,uploadImage ,deleteAccountForever,register,deleteProduct,orderedProducts};
+const orderReceive=async(product_id,status_code,delivering_date,phn_gmail,issue_date,date,user_name)=>{
+    var response=null;
+    try {
+        await API_Client.post("/order_receive",{
+            product_id : product_id,
+            status_code : status_code,
+            delivering_date :delivering_date,
+            phn_gmail : phn_gmail,
+            issue_date :issue_date,
+            date : date,
+            user_name : user_name
+        }).then((json_response)=>{
+            response=json_response.data
+             console.log(response)
+        })
+    } catch (error) {
+        
+    }
+   
+    return response;
+}
+
+export default { fetchAllProducts, login, fetchDetails,uploadImage ,
+    deleteAccountForever,register,deleteProduct,orderedProducts,orderReceive};
