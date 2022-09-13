@@ -13,10 +13,6 @@ import {
     PusherEvent,
   } from '@pusher/pusher-websocket-react-native';
 
-  
- 
-
-
 export default class OrderedProducts extends Component {
 
      
@@ -58,12 +54,12 @@ onEvent: async (event) => {
 });
 
     }
-
     async fetchOrderedProducts(){
         try {
             var user_name=await AsyncStorage.getItem("user_name")
             var response=await APIs.orderedProducts(user_name,this.props.selector_code)
             this.setState({all_data: response})
+            console.log(response)
         } catch (error) {
             
         }

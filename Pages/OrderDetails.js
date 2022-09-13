@@ -41,22 +41,46 @@ export default class OrderDetails extends Component {
         this.setButtonActivity()
     }
 
-     async onOrderReceive(){
+    async onOrderReject(){
+        
+    }
+
+     async onAllButtonTask( status_code){
          try {
              var user_name= await AsyncStorage.getItem("user_name")
-             const {  product_id, status_code, phn_gmail, issue_date } = this.props.data
+             const {  product_id, phn_gmail, issue_date } = this.props.data
              
-         var response= await APIs.orderReceive(product_id,this.props.selector_code,
+             
+         var response= await APIs.orderReceive(product_id,status_code,
             this.state.delivering_date,phn_gmail,issue_date,
             moment(new Date()).format("DD-MM-YYYY   h:mm:ss a").toString(),user_name)
-            if(response=="received"){
+            if(response.response=="received"){
                 this.setState({receiveTxt : "Received"})
                 this.setState({receiveBtnDisable: true})
                 this.setState({receiveColor : "#699985"})
                 this.setState({rejectBtnDisable : true})
                 this.setState({rejectColor : "#ff6666"})
-            }else{
-                Alert.alert(response.toString())
+
+            }else if(response.response=="delivered"){
+                this.setState({ receiveBtnDisable: true })
+                this.setState({ rejectBtnDisable: true })
+                this.setState({ deliveringBtnDisable: true })
+                this.setState({ receiveColor: "#699985" })
+                this.setState({ rejectColor: "#ff6666" })
+                this.setState({ rejectColor: "#7f7fff" })
+                
+            }
+            else if(response.response=="rejected"){
+                this.setState({ receiveBtnDisable: true })
+                this.setState({ rejectBtnDisable: true })
+                this.setState({ deliveringBtnDisable: true })
+                this.setState({ receiveColor: "#699985" })
+                this.setState({ rejectColor: "#ff6666" })
+                this.setState({ rejectColor: "#7f7fff" })
+                this.setState({ rejectTxt: "Rejected" })
+                
+            }else if (response.response=="failed"){
+
             }
          } catch (error) {
              
@@ -107,7 +131,7 @@ export default class OrderDetails extends Component {
                 this.setState({ rejectColor: "#7f7fff" })
                 this.setState({ rejectTxt: "Rejected" })
 
-            } else if (order_status == 4) {
+            } else if (order_status == 4) { //Delivered
                 this.setState({ receiveBtnDisable: true })
                 this.setState({ rejectBtnDisable: true })
                 this.setState({ deliveringBtnDisable: true })
@@ -126,10 +150,7 @@ export default class OrderDetails extends Component {
         const screenWidth = Dimensions.get('window').width
         const screenHeight = Dimensions.get('window').height
         const { address, client_name, contact_no, imagepath, number_of_product, product_price,
-            issue_date, delivering_date } = this.props.data
-
-
-
+            issue_date, delivering_date, order_status } = this.props.data
 
         return (
             <NativeBaseProvider>
@@ -190,7 +211,7 @@ export default class OrderDetails extends Component {
                             <TouchableOpacity disabled={this.state.rejectBtnDisable} style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 backgroundColor: this.state.rejectColor, borderRadius: 6, height: '60%', width: '40%'
-                            }} onPress={() => { }}>
+                            }} onPress={() => {this.onAllButtonTask(3) }}>
                                 <Text style={{ color: "white" }}>{this.state.rejectTxt}</Text>
                             </TouchableOpacity>
 
@@ -199,22 +220,19 @@ export default class OrderDetails extends Component {
                             <TouchableOpacity disabled={this.state.receiveBtnDisable} style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 backgroundColor: this.state.receiveColor, borderRadius: 6, height: '60%', width: '40%'
-                            }} onPress={async() => {this.onOrderReceive() }}>
+                            }} onPress={async() => {this.onAllButtonTask() }}>
                                 <Text style={{ color: "white" }}>{this.state.receiveTxt}</Text>
 
                             </TouchableOpacity >
                             <TouchableOpacity disabled={this.state.deliveringBtnDisable} style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 backgroundColor: this.state.deliverColor, height: '60%', width: '40%', borderRadius: 6
-                            }} onPress={() => { }}>
+                            }} onPress={() => { this.onAllButtonTask(2) }}>
                                 <Text style={{ color: "white" }}>{this.state.deliverTxt}</Text>
                             </TouchableOpacity>
 
                         </View>
                     </View>
-
-
-
                 </View>
             </NativeBaseProvider>
         );
