@@ -23,26 +23,26 @@ export default class AllProducts extends Component {
             all_data: [],
             name: '',
             selected_id: [],
-            refresh: false
+
         }
     }
 
     componentDidMount() {
+
         this.fetch_all_products()
     }
 
     async onDeleteProduct() {
         try {
-            var delete_response = await APIs.deleteProduct(this.state.selected_id)
+            var delete_response = await APIs.deleteProducts(this.state.selected_id)
             if (delete_response.response === "ok") {
 
-               this.setState({all_data:this.state.all_data.filter(item=>item.id !== this.state.selected_id)})
-               this.setState({refresh:!this.state.refresh})
-
-                Toast.show({ title: "Product deleted successfully" })
+                this.setState({ all_data: this.state.all_data.filter(item => item.id !== this.state.selected_id) })
+                this.fetch_all_products() //Re-rendering items
+                Toast.show({ title: "successfully deleted" })
 
             } else {
-                Toast.show({ title: "Failed to delete product" })
+                Toast.show({ title: "Failed to " })
             }
             console.log(delete_response.response)
 
@@ -51,16 +51,39 @@ export default class AllProducts extends Component {
         }
     }
 
-    async fetch_all_products() {
+    async onStockoutProduct() {
+        try {
+            var stockOut_response = await APIs.stockoutProduct(this.state.selected_id)
+            if (stockOut_response.response === "ok") {
 
+                this.setState({ all_data: this.state.all_data.filter(item => item.id !== this.state.selected_id) })
+
+                this.fetch_all_products() //Re-rendering items
+                
+
+                Toast.show({ title: "successfully put  out of stock" })
+
+            } else {
+                Toast.show({ title: "Failed to put out of stock" })
+            }
+
+
+        } catch (error) {
+
+        }
+    }
+
+
+
+    async fetch_all_products() {
+        var deletion_status = this.props.selector_code;
         try {
             var user_name = await AsyncStorage.getItem("user_name")
-
-            const response = await APIs.fetchAllProducts(user_name)
+            const response = await APIs.fetchAllProducts(user_name, deletion_status)
 
             this.setState({ all_data: response })
             this.setState({ name: response[0].name })
-            console.log(this.state.name)
+            console.log(deletion_status)
 
         } catch (error) {
 
@@ -70,14 +93,19 @@ export default class AllProducts extends Component {
     getSelected = (item) => this.state.selected_id.includes(item.id)
 
     render() {
-        const screenWidth=Dimensions.get('window').width
-        const screenHeight=Dimensions.get('window').height
+        const screenWidth = Dimensions.get('window').width
+        const screenHeight = Dimensions.get('window').height
 
         return (
             <NativeBaseProvider>
-                <View style={{height:screenHeight,width : screenWidth}}>
-                    <View style={{}}>
-                        <Text style={{ fontSize: 18, alignSelf: "center", color: '#4682b4', margin: '2%', flex: 1 }}>{this.state.name}</Text>
+                <View style={{ height: screenHeight, width: screenWidth }}>
+                    <View style={{ width: screenWidth, height: screenHeight * 0.08 }}>
+                        {
+                            this.props.selector_code == 0 ?
+                                <Text style={{ fontSize: 18, alignSelf: "center", color: '#4682b4', margin: '2%', flex: 1 }}>{this.state.name}</Text> :
+                                <Text style={{ fontSize: 18, alignSelf: "center", color: '#4682b4', margin: '2%', flex: 1 }}>Stock Out Products</Text>
+                        }
+
                     </View>
 
                     {
@@ -94,15 +122,19 @@ export default class AllProducts extends Component {
                     {
                         this.state.selected_id.length > 0 &&
                         <TouchableOpacity onPress={() => {
-                            this.onDeleteProduct()
+                            if (this.props.selector_code == 0) {
+                                this.onStockoutProduct()
+                            } else if (this.props.selector_code == 1) {
+                                this.onDeleteProduct()
+                            }
+
                         }} style={{ width: 50, height: 50, alignSelf: 'flex-end', elevation: 10 }}>
                             <Image source={require("../Assets/delete.png")} style={{ width: "100%", height: "100%", tintColor: "red" }} />
                         </TouchableOpacity>
                     }
-                    <View style={{ }}>
+                    <View style={{}}>
                         <FlatList
-                        showsVerticalScrollIndicator={false}
-                            extraData={!this.state.refresh}
+                            showsVerticalScrollIndicator={false}
                             keyExtractor={(item, index) => index.toString()}
                             style={{ alignSelf: 'center' }}
                             numColumns={2}
@@ -111,24 +143,25 @@ export default class AllProducts extends Component {
                                 <TouchableOpacity onPress={() => {
                                     if (this.state.selected_id.length > 0) {
                                         if (this.state.selected_id.includes(item.id)) {
-                                            const new_selectedId = this.state.selected_id.filter((newID) => newID !== item.id)
+                                            const new_selectedId = this.state.selected_id.filter((newID) => newID !== item.id)//Deselecting selected items
                                             this.setState({ selected_id: [...new_selectedId] })
 
 
                                         } else {
-                                            this.setState({ selected_id: [...this.state.selected_id, item.id] })
+                                            this.setState({ selected_id: [...this.state.selected_id, item.id] }) //Select items
                                         }
                                     }
 
                                 }} onLongPress={() => {
 
-                                    this.setState({ selected_id: [...this.state.selected_id, item.id] })
+                                    this.setState({ selected_id: [...this.state.selected_id, item.id] }) //selecting a single  item
                                 }}>
                                     <ProductChildView selectedId={this.getSelected(item)} data={item} />
 
                                 </TouchableOpacity>
 
                             )}
+
                         />
                     </View>
                 </View>
@@ -136,5 +169,5 @@ export default class AllProducts extends Component {
         );
     }
 
-   
+
 }

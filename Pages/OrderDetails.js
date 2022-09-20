@@ -21,7 +21,7 @@ export default class OrderDetails extends Component {
             rejectBtnDisable: false,
             receiveBtnDisable: false,
             deliveringBtnDisable: false,
-            deliveringDateBtnDisable : false,
+            deliveringDateBtnDisable: false,
             btnGroupEnable: "flex",
             delivering_date: "",
             receiveTxt: "Receive",
@@ -30,9 +30,6 @@ export default class OrderDetails extends Component {
             open_DT_picker: false,
             mydate: new Date(),
             displaymode: 'date'
-
-
-
         }
     }
 
@@ -41,36 +38,35 @@ export default class OrderDetails extends Component {
         this.setButtonActivity()
     }
 
-    async onOrderReject(){
-        
-    }
+   
 
-     async onAllButtonTask( status_code){
-         try {
-             var user_name= await AsyncStorage.getItem("user_name")
-             const {  product_id, phn_gmail, issue_date } = this.props.data
-             
-             
-         var response= await APIs.orderReceive(product_id,status_code,
-            this.state.delivering_date,phn_gmail,issue_date,
-            moment(new Date()).format("DD-MM-YYYY   h:mm:ss a").toString(),user_name)
-            if(response.response=="received"){
-                this.setState({receiveTxt : "Received"})
-                this.setState({receiveBtnDisable: true})
-                this.setState({receiveColor : "#699985"})
-                this.setState({rejectBtnDisable : true})
-                this.setState({rejectColor : "#ff6666"})
+    async onAllButtonTask(status_code) {  // Controls all the buttons activity like when each  button will be enabled or disabled or  changes color after 
+        // receiving response from server
+        try {
+            var user_name = await AsyncStorage.getItem("user_name")
+            const { product_id, phn_gmail, issue_date } = this.props.data
 
-            }else if(response.response=="delivered"){
+
+            var response = await APIs.orderReceive(product_id, status_code,
+                this.state.delivering_date, phn_gmail, issue_date,
+                moment(new Date()).format("DD-MM-YYYY   h:mm:ss a").toString(), user_name)
+            if (response.response == "received") {
+                this.setState({ receiveTxt: "Received" })
+                this.setState({ receiveBtnDisable: true })
+                this.setState({ receiveColor: "#699985" })
+                this.setState({ rejectBtnDisable: true })
+                this.setState({ rejectColor: "#ff6666" })
+
+            } else if (response.response == "delivered") {
                 this.setState({ receiveBtnDisable: true })
                 this.setState({ rejectBtnDisable: true })
                 this.setState({ deliveringBtnDisable: true })
                 this.setState({ receiveColor: "#699985" })
                 this.setState({ rejectColor: "#ff6666" })
                 this.setState({ rejectColor: "#7f7fff" })
-                
+
             }
-            else if(response.response=="rejected"){
+            else if (response.response == "rejected") {
                 this.setState({ receiveBtnDisable: true })
                 this.setState({ rejectBtnDisable: true })
                 this.setState({ deliveringBtnDisable: true })
@@ -78,16 +74,16 @@ export default class OrderDetails extends Component {
                 this.setState({ rejectColor: "#ff6666" })
                 this.setState({ rejectColor: "#7f7fff" })
                 this.setState({ rejectTxt: "Rejected" })
-                
-            }else if (response.response=="failed"){
+
+            } else if (response.response == "failed") {
 
             }
-         } catch (error) {
-             
-         }
+        } catch (error) {
+
+        }
     }
 
-    setButtonActivity() {
+    setButtonActivity() { // Controls all the buttons activity like when each  button will be enabled or disabled or  changes color initially
         var status_code = this.props.selector_code
         var order_status = this.props.data.order_status
 
@@ -102,11 +98,11 @@ export default class OrderDetails extends Component {
             if (order_status == 0) { //pending
                 this.setState({ receiveBtnDisable: true })
                 this.setState({ deliveringBtnDisable: true })
-                this.setState({rejectBtnDisable : false})
+                this.setState({ rejectBtnDisable: false })
                 this.setState({ receiveColor: "#699985" })
                 this.setState({ deliverColor: "#7f7fff" })
                 this.setState({ rejectColor: "#ff0000" })
-                
+
             } else if (order_status == 1) { // received
                 this.setState({ receiveBtnDisable: true })
                 this.setState({ rejectBtnDisable: true })
@@ -156,10 +152,10 @@ export default class OrderDetails extends Component {
             <NativeBaseProvider>
                 {
                     this.state.open_DT_picker && (
-                        <DateTimePicker
+                        <DateTimePicker                 // Sets delivering date and time 
                             testID="dateTimePicker"
                             value={this.state.mydate}
-                            mode={this.state.displaymode}
+                            mode={this.state.displaymode} 
                             is24Hour={true}
                             display="default"
                             onChange={(event, selected_date) => {
@@ -172,9 +168,9 @@ export default class OrderDetails extends Component {
                                     this.setState({ receiveBtnDisable: false })
                                     this.setState({ receiveColor: "#065535" })
                                 }
-                       }}
+                            }}
 
-                        />)
+                        />) 
                 }
                 <View style={{ width: screenWidth, height: screenHeight }}>
                     <View style={{ height: screenHeight / 3, width: screenWidth, margin: '2%' }}>
@@ -211,7 +207,7 @@ export default class OrderDetails extends Component {
                             <TouchableOpacity disabled={this.state.rejectBtnDisable} style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 backgroundColor: this.state.rejectColor, borderRadius: 6, height: '60%', width: '40%'
-                            }} onPress={() => {this.onAllButtonTask(3) }}>
+                            }} onPress={() => { this.onAllButtonTask(3) }}>
                                 <Text style={{ color: "white" }}>{this.state.rejectTxt}</Text>
                             </TouchableOpacity>
 
@@ -220,7 +216,7 @@ export default class OrderDetails extends Component {
                             <TouchableOpacity disabled={this.state.receiveBtnDisable} style={{
                                 justifyContent: 'center', alignItems: 'center',
                                 backgroundColor: this.state.receiveColor, borderRadius: 6, height: '60%', width: '40%'
-                            }} onPress={async() => {this.onAllButtonTask() }}>
+                            }} onPress={async () => { this.onAllButtonTask() }}>
                                 <Text style={{ color: "white" }}>{this.state.receiveTxt}</Text>
 
                             </TouchableOpacity >

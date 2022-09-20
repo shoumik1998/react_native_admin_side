@@ -27,7 +27,7 @@ export default class Authentication extends Component {
 
 
     if (this.state.userName === user_name && this.state.userPassword === user_password) {
-      Transition.go("AccountDetails", "homeStackID")
+      Transition.go("AccountDetails", "homeStackID") // Checks whether you are the author or not
 
     } else {
       Alert.alert("Not authenticated")

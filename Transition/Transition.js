@@ -2,7 +2,7 @@ import { Navigation } from "react-native-navigation";
 
 
 
-const go = (componentName, componentId,prop1,prop2) => {
+const go = (componentName, componentId,prop1,prop2) => { // A common function to Navigate from one to another page with some props
 
     Navigation.push(componentId, {
         
@@ -28,7 +28,7 @@ const go = (componentName, componentId,prop1,prop2) => {
 }
 
 
-const setRoot = (componentName) => {
+const setRoot = (componentName) => { // Sets a Root Page after Loged In 
     Navigation.setRoot({
         root: {
             sideMenu: {

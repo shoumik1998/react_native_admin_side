@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import { Text, View, StyleSheet, Image, TextInput, KeyboardAvoidingView,
-     TouchableOpacity, Alert, ActivityIndicator,Dimensions,TouchableWithoutFeedback,Keyboard } from 'react-native'
+import {
+    Text, View, StyleSheet, Image, TextInput, KeyboardAvoidingView,
+    TouchableOpacity, Alert, ActivityIndicator, Dimensions, TouchableWithoutFeedback, Keyboard
+} from 'react-native'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { NativeBaseProvider, ScrollView, Toast } from "native-base"
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -30,12 +32,12 @@ export default class HomePage extends Component {
     }
     async componentDidMount() {
         this.setState({ shopName: await AsyncStorage.getItem("shop_name") })
-        this.setState({ user_name: await AsyncStorage.getItem("user_name") })
+        this.setState({ user_name: await AsyncStorage.getItem("user_name") }) // Saved  shop name and user name retrived
 
     }
 
     cropProductImage() {
-        ImageCropPicker.openPicker({
+        ImageCropPicker.openPicker({ // image is cropped
             width: 300,
             height: 300,
             cropping: true,
@@ -72,7 +74,7 @@ export default class HomePage extends Component {
                 this.state.user_name
 
             )
-            console.log(upResponse)
+           
 
             if (upResponse.response === "uploaded") {
                 Toast.show({
@@ -85,7 +87,7 @@ export default class HomePage extends Component {
             } else {
                 Toast.show({ title: " Something error occured" })
             }
-            this.setState({ indigatorState: upResponse })
+            this.setState({ indigatorState: upResponse }) // Indigator will stop animating when response received
         }
 
 
@@ -94,16 +96,16 @@ export default class HomePage extends Component {
 
     render() {
 
-        const screenWidth=Dimensions.get('window').width
-        const screenHeight=Dimensions.get('window').height
+        const screenWidth = Dimensions.get('window').width
+        const screenHeight = Dimensions.get('window').height
         return (
-            
+
             <NativeBaseProvider>
-                <TouchableWithoutFeedback onPress={()=>{Keyboard.dismiss()}}>
-                    <View  style={{width:screenWidth,height:screenHeight,alignContent:'center',justifyContent:'center'}}>
-                        <View style={{ justifyContent: 'center', flexDirection: 'row', flex: 2, width: "100%", height:"100%" ,alignItems:"center",alignContent:'center',alignSelf:"center"}}>
+                <TouchableWithoutFeedback onPress={() => { Keyboard.dismiss() }}> 
+                    <View style={{ width: screenWidth, height: screenHeight, alignContent: 'center', justifyContent: 'center' }}>
+                        <View style={{ justifyContent: 'center', flexDirection: 'row', flex: 2, width: "100%", height: "100%", alignItems: "center", alignContent: 'center', alignSelf: "center" }}>
                             <TouchableOpacity onPress={() => {
-                                Navigation.mergeOptions(this.props.componentId, {
+                                Navigation.mergeOptions(this.props.componentId, { // Opening side menu bar
                                     sideMenu: {
                                         left: {
                                             visible: true,
@@ -111,7 +113,7 @@ export default class HomePage extends Component {
                                     },
                                 });
 
-                            }} style={{ flex: 1.7,margin:'2%' }}>
+                            }} style={{ flex: 1.7, margin: '2%' }}>
                                 <Image style={{ width: "100%", height: "100%", resizeMode: 'contain' }} source={require("../Assets/menu_512.png")} />
                             </TouchableOpacity>
                             <Text style={this.styles.shopNameStyle}>
@@ -180,7 +182,7 @@ export default class HomePage extends Component {
 
                         <TouchableOpacity
                             onPress={() => {
-                                this.state.orderableStatus == 0 ?
+                                this.state.orderableStatus == 0 ? // Sets  product is orderable or not  
                                     this.setState({ orderableStatus: 1 }) : this.setState({ orderableStatus: 0 })
                             }}
                             style={{
@@ -190,7 +192,7 @@ export default class HomePage extends Component {
 
 
                             {
-                                this.state.orderableStatus === 1 ?
+                                this.state.orderableStatus === 1 ? // Checks product is orderable or not
                                     <Text style={{ fontSize: 18, color: "white" }}>Orderable</Text> :
                                     <Text style={{ fontSize: 18, color: "white" }}> Not Orderable</Text>
                             }
@@ -201,9 +203,9 @@ export default class HomePage extends Component {
                         </TouchableOpacity>
 
                     </View>
-                    </TouchableWithoutFeedback>
+                </TouchableWithoutFeedback>
             </NativeBaseProvider>
-            
+
 
 
 
@@ -217,10 +219,10 @@ export default class HomePage extends Component {
         },
         shopNameStyle: {
             color: "#6897bb",
-            marginStart:"18%",
+            marginStart: "18%",
             fontSize: 19,
             flex: 9,
-         alignSelf: 'center'
+            alignSelf: 'center'
 
         },
         nameTxtInput: {
